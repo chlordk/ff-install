@@ -1,0 +1,5 @@
+[app]
+ub22 ansible_host=ub22
+
+[app:vars]
+ansible_user='pgram'

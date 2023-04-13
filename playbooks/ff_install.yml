@@ -1,0 +1,156 @@
+- hosts: app
+
+  tasks:
+
+    - name: Sysstat package
+      ansible.builtin.package:
+        name: sysstat
+      become: true
+      become_method: sudo
+      tags:
+        - install_sysstat
+
+    - name: Git install
+      ansible.builtin.package:
+        name: git
+      become: true
+      become_method: sudo
+      tags:
+        - install_git
+
+    - name: Unzip install
+      ansible.builtin.package:
+        name: unzip
+      become: true
+      become_method: sudo
+      tags:
+        - install_unzip
+
+    - name: Npm install
+      ansible.builtin.package:
+        name: npm
+      become: true
+      become_method: sudo
+      tags:
+        - install_npm
+
+    - name: Node-typescript install
+      ansible.builtin.package:
+        name: node-typescript
+      become: true
+      become_method: sudo
+      tags:
+        - install_node-typescript
+
+    - name: Openjdk-19-jre install
+      ansible.builtin.package:
+        name: openjdk-19-jre
+      become: true
+      become_method: sudo
+      tags:
+        - install_openjdk-19-jre
+
+    - name: Postgresql install
+      ansible.builtin.package:
+        name: postgresql
+      become: true
+      become_method: sudo
+      tags:
+        - install_postgresql
+
+    - name: Futureforms core app clone
+      ansible.builtin.git:
+        repo: https://github.com/miracle-42/forms42.core
+        dest: core
+        version: version-2.1-dev
+      tags:
+        - clon_core
+
+    - name: Install Futureforms core app packages based on package.json using the npm
+      community.general.npm:
+        path: core
+        state: present
+      tags:
+        - npm_install_core
+
+    - name: Build Futureforms core app
+      ansible.builtin.command: npm run build
+      args:
+        chdir: core
+      tags:
+        - npm_build_core
+
+    - name: Futureforms demo app clone
+      ansible.builtin.git:
+        repo: https://github.com/chlordk/forms42.demo
+        dest: demo
+        force: true
+      tags:
+        - clon_demo
+
+    - name: Install Futureforms demo app packages based on package.json using the npm
+      community.general.npm:
+        path: demo
+        state: present
+      tags:
+        - npm_install_demo
+
+    - name: Build Futureforms demo app
+      ansible.builtin.command: npm run build
+      args:
+        chdir: demo
+      tags:
+        - npm_build_demo
+
+    - name: Futureforms Database.js clone 
+      ansible.builtin.git:
+        repo: https://github.com/chlordk/database.js.git
+        dest: database.js.git
+      tags:
+        - clon_database.js
+
+    - name: Create the postgres database user hr
+      ansible.builtin.command: psql -c "CREATE USER hr WITH PASSWORD 'hr'"
+      become: true
+      become_method: sudo
+      become_user: postgres
+      tags:
+        - create-hr-user
+
+    - name: Create the postgres database hr
+      ansible.builtin.command: psql -c "CREATE DATABASE hr OWNER hr"
+      become: true
+      become_method: sudo
+      become_user: postgres
+      tags:
+        - create-hr-db
+
+    - name: Install the postgres hr schema objects
+      ansible.builtin.command: psql -h 127.0.0.1 -U hr -d hr -f demo/data/data.demo
+      environment:
+        PGPASSWORD: hr
+      tags:
+        - install-hr-schema-objects
+
+    - name: Create dir database.js.demo
+      ansible.builtin.file:
+        path: database.js.demo
+        state: directory
+      tags:
+        - create-database.js.demo
+
+    - name: Unarchive the demo app
+      ansible.builtin.unarchive:
+        src: database.js.git/downloads/database.js.zip
+        dest: database.js.demo
+        remote_src: true
+      tags:
+        - unarchive-database.js.demo
+
+    - name: Fix up app destination in config file
+      ansible.builtin.replace: 
+        path: database.js.demo/conf/config.json
+        regexp: '\"path\": \"./app\"'
+        replace: '"path": "../demo/dist"'
+      tags:
+        - fix-demo-dest
