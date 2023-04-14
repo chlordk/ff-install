@@ -48,7 +48,7 @@ The installation, download and compilation takes about 2 minutes.
 
 ## Start database.js
 
-`database.js` is a Java program which is the actaul web server.
+`database.js` is a Java program which is the actual web server.
 
 ```
 cd playbooks/database.js.demo
@@ -61,3 +61,26 @@ Now the frontscreen can be seen.
 
 ![Frontscreen](img/ffscreenshot_1.png)
 
+Click `Connection` in the menu bar and then `Connect`.
+
+![Connect](img/ffscreenshot_2.png)
+
+Enter demo user `hr`and demo password `hr` to login to the database.
+
+![Login](img/ffscreenshot_3.png)
+
+Click the *hamburger button* ☰ in upper left corner and then `Countries`
+
+![BurgerMenu](img/ffscreenshot_4.png)
+
+The empty Countries table is now shown.
+
+![Countries](img/ffscreenshot_5.png)
+
+Click `Query` and `Execute` in the top menu or press the key `F8`.
+
+![Execute](img/ffscreenshot_6.png)
+
+Now the table is filled with data from the database.
+
+![CountryNames](img/ffscreenshot_7.png)
