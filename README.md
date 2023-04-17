@@ -7,7 +7,7 @@ This demo will show what a lot of the classes in FutureForms can do.
 
 This script will install a lot of TypeScript package
 so it is recommended to run the script in a Ubuntu
-server running on a virtual machin (VirtualBox, LXC,VmWare).
+server running on a virtual machin (VirtualBox, LXC, VmWare, WSL).
 This will make a cleanup easier.
 
 In Ubuntu these packages will be installed:
@@ -21,7 +21,7 @@ In Ubuntu these packages will be installed:
 
 ## Install
 
-Start Ubuntu and install Ansible:
+Start Ubuntu and install Ansible yourself:
 
 ```
 sudo apt install ansible
@@ -29,7 +29,7 @@ sudo apt install ansible
 
 Now you are ready to install 
 [FutureForms Featured Demo](playbooks/demo/)
-with ansible.
+with the ansible script.
 
 If you want to develop yourself you should start from the list:
 
