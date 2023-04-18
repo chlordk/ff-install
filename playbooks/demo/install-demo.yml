@@ -1,4 +1,4 @@
-- hosts: localhost
+- hosts: app
 
   tasks:
 
@@ -17,6 +17,14 @@
       become_method: sudo
       tags:
         - install_git
+
+    - name: python3-psycopg2
+      ansible.builtin.package:
+        name: python3-psycopg2
+      become: true
+      become_method: sudo
+      tags:
+        - install_python3-psycopg2
 
     - name: Unzip install
       ansible.builtin.package:
@@ -102,23 +110,50 @@
       tags:
         - npm_build_demo
 
-    - name: Futureforms Database.js clone 
+    - name: Futureforms Database.js clone
       ansible.builtin.git:
         repo: https://github.com/chlordk/database.js.git
         dest: ~/database.js.git
       tags:
         - clon_database.js
 
+    - name: Remove the postgres database user hr
+      community.postgresql.postgresql_user:
+        name: hr
+        password: hr
+        state: absent
+        fail_on_user: false
+      become: true
+      become_method: sudo
+      become_user: postgres
+      tags:
+        - remove-hr-user
+
     - name: Create the postgres database user hr
-      ansible.builtin.command: psql -c "CREATE USER hr WITH PASSWORD 'hr'"
+      community.postgresql.postgresql_user:
+        name: hr
+        password: hr
+        state: present
       become: true
       become_method: sudo
       become_user: postgres
       tags:
         - create-hr-user
 
+    - name: Remove the postgres database hr
+      community.postgresql.postgresql_db:
+        name: hr
+        state: absent
+      become: true
+      become_method: sudo
+      become_user: postgres
+      tags:
+        - remove-hr-db
+
     - name: Create the postgres database hr
-      ansible.builtin.command: psql -c "CREATE DATABASE hr OWNER hr"
+      community.postgresql.postgresql_db:
+        name: hr
+        state: present
       become: true
       become_method: sudo
       become_user: postgres
