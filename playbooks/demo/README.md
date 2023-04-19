@@ -7,6 +7,18 @@ This demo will show what a lot of the classes in FutureForms can do.
 
 Read the requirements at the [frontpage](../../README.md).
 
+## Clone repository
+
+Create a working directory with name of choice and go into it.
+Then clone this repository.
+
+```
+mkdir foo
+cd foo
+git clone https://github.com/peter-gram/ff-install ff-install
+cd ff-install
+```
+
 ## Install
 
 Change directory and run the `install-demo.yml` playbook:
