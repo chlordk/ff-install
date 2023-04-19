@@ -9,9 +9,10 @@ Read the requirements at the [frontpage](../../README.md).
 
 ## Install
 
-Run the `install-demo` playbook:
+Change directory and run the `install-demo.yml` playbook:
 
 ```
+cd playbooks/demo
 ansible-playbook install-demo.yml 
 ```
 
