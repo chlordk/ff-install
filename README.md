@@ -40,11 +40,20 @@ Start Ubuntu and install Ansible and Git yourself:
 sudo apt install ansible git
 ```
 
+Clone this repository in your working directory:
+
+```
+git clone https://github.com/peter-gram/ff-install
+cd ff-install
+``` 
+
 Now you are ready to install 
 [FutureForms Featured Demo](playbooks/demo/)
 with the ansible script.
 
 If you want to develop yourself you should start from the list:
 
-* [hello1](playbooks/hello1) The simplest demo of FutureForms
-* hello2 To be made
+* [hello1](playbooks/hello1) Create a login form
+* [hello2](playbooks/hello2) One table
+* [hello2](playbooks/hello3) Sort column
+* [hello4](playbooks/hello4) Join two tables - master/detail
