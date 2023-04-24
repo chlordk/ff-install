@@ -1,5 +1,8 @@
 - hosts: app
 
+  vars:
+    - install_path: ~/futureforms
+
   tasks:
 
     - name: Sysstat package
@@ -69,14 +72,14 @@
     - name: Futureforms core app clone
       ansible.builtin.git:
         repo: https://github.com/miracle-42/forms42.core
-        dest: ~/core
+        dest: "{{ install_path }}/core"
         version: version-2.1-dev
       tags:
         - clon_core
 
     - name: Install Futureforms core app packages based on package.json using the npm
       community.general.npm:
-        path: ~/core
+        path: "{{ install_path }}/core"
         state: present
       tags:
         - npm_install_core
@@ -84,21 +87,21 @@
     - name: Build Futureforms core app
       ansible.builtin.command: npm run build
       args:
-        chdir: ~/core
+        chdir: "{{ install_path }}/core"
       tags:
         - npm_build_core
 
     - name: Futureforms demo app clone
       ansible.builtin.git:
         repo: https://github.com/chlordk/forms42.demo
-        dest: ~/demo
+        dest: "{{ install_path }}/demo"
         force: true
       tags:
         - clon_demo
 
     - name: Install Futureforms demo app packages based on package.json using the npm
       community.general.npm:
-        path: ~/demo
+        path: "{{ install_path }}/demo"
         state: present
       tags:
         - npm_install_demo
@@ -106,14 +109,14 @@
     - name: Build Futureforms demo app
       ansible.builtin.command: npm run build
       args:
-        chdir: ~/demo
+        chdir: "{{ install_path }}/demo"
       tags:
         - npm_build_demo
 
     - name: Futureforms Database.js clone
       ansible.builtin.git:
         repo: https://github.com/chlordk/database.js.git
-        dest: ~/database.js.git
+        dest: "{{ install_path }}/database.js.git"
       tags:
         - clon_database.js
 
@@ -161,7 +164,7 @@
         - create-hr-db
 
     - name: Install the postgres hr schema objects
-      ansible.builtin.command: psql -h 127.0.0.1 -U hr -d hr -f demo/data/data.demo
+      ansible.builtin.command: psql -h 127.0.0.1 -U hr -d hr -f "{{ install_path }}/demo/data/data.demo"
       environment:
         PGPASSWORD: hr
       tags:
@@ -169,23 +172,24 @@
 
     - name: Create dir database.js.demo
       ansible.builtin.file:
-        path: ~/database.js.demo
+        path: "{{ install_path }}/database.js.demo"
         state: directory
       tags:
         - create-database.js.demo
 
-    - name: Unarchive the demo app
+    - name: Unarchive the futureforms rest api 
       ansible.builtin.unarchive:
-        src: ~/database.js.git/downloads/database.js.zip
-        dest: ~/database.js.demo
+        src: "{{ install_path }}/database.js.git/downloads/database.js.zip"
+        dest: "{{ install_path }}/database.js.demo"
         remote_src: true
       tags:
         - unarchive-database.js.demo
 
     - name: Fix up app destination in config file
       ansible.builtin.replace: 
-        path: ~/database.js.demo/conf/config.json
+        path: "{{ install_path }}/database.js.demo/conf/config.json"
         regexp: '\"path\": \"./app\"'
         replace: '"path": "../demo/dist"'
       tags:
+
         - fix-demo-dest
