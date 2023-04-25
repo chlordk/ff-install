@@ -19,6 +19,17 @@ git clone https://github.com/peter-gram/ff-install ff-install
 cd ff-install
 ```
 
+## Configure
+
+In the top of [install-demo.yml](install-demo.yml) tho
+following changes might be required.
+
+The default target host is set to `app` which could be set to localhost
+if you are running on the same server.
+
+The `install_path` is set to `~/futureforms` in your home dir.
+This is where the installation will be located.
+
 ## Install
 
 Change directory and run the `install-demo.yml` playbook:
