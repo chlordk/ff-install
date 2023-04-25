@@ -32,11 +32,10 @@ This is where the installation will be located.
 
 ## Install
 
-Change directory and run the `install-demo.yml` playbook:
+Run the `install-demo.yml` playbook:
 
 ```
-cd playbooks/demo
-ansible-playbook install-demo.yml 
+ansible-playbook playbooks/demo/install-demo.yml 
 ```
 
 The installation, download and compilation takes about 3 minutes
