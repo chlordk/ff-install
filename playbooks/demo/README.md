@@ -48,7 +48,7 @@ and will take up about 1.1GB disk space.
 Go to the directory and start the webserver:
 
 ```
-cd playbooks/demo/database.js.demo
+cd ~/futureforms/database.js.demo/
 bin/database.js start
 ```
 
