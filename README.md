@@ -51,9 +51,10 @@ Now you are ready to install
 [FutureForms Featured Demo](playbooks/demo/)
 with the ansible script.
 
-If you want to develop yourself you should start from the list:
+If you want to develop yourself you should start from the tutorial list:
 
-* [hello1](playbooks/hello1) Create a login form
-* [hello2](playbooks/hello2) One table
-* [hello2](playbooks/hello3) Sort column
-* [hello4](playbooks/hello4) Join two tables - master/detail
+* [hello1](playbooks/hello1) Anonymous login
+* [hello2](playbooks/hello2) Username login
+* [hello3](playbooks/hello3) One table
+* [hello4](playbooks/hello4) Sort column
+* [hello5](playbooks/hello5) Join two tables - master/detail
