@@ -21,7 +21,15 @@
       tags:
         - install_git
 
-    - name: python3-psycopg2
+    - name: Ansible install
+      ansible.builtin.package:
+        name: ansible
+      become: true
+      become_method: sudo
+      tags:
+        - install_ansible
+
+    - name: Install python3-psycopg2
       ansible.builtin.package:
         name: python3-psycopg2
       become: true
