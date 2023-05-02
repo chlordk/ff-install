@@ -4,6 +4,8 @@ FutureForms is a Typescript library for fast and easy development of data entry 
 
 Turn a HTML table into a database view, search and edit form with a few edits.
 
+Go to the [install section](#install-futureforms-featured-demo-and-tutorial-installation) .
+
 ## Stack
 
 A normal Full-stack development consist of af front-end, a back-end and a database.
