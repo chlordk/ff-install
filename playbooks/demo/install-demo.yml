@@ -1,7 +1,7 @@
-- hosts: app
+- hosts: localhost
 
   vars:
-    - install_path: ~/futureforms
+    - install_path: ../../build
 
   tasks:
 
@@ -69,6 +69,14 @@
       tags:
         - install_openjdk-19-jre
 
+    - name: Maven install
+      ansible.builtin.package:
+        name: maven
+      become: true
+      become_method: sudo
+      tags:
+        - install_maven
+
     - name: Postgresql install
       ansible.builtin.package:
         name: postgresql
@@ -77,56 +85,70 @@
       tags:
         - install_postgresql
 
-    - name: Futureforms core app clone
-      ansible.builtin.git:
-        repo: https://github.com/miracle-42/forms42.core
-        dest: "{{ install_path }}/core"
-        version: version-2.1-dev
-      tags:
-        - clon_core
+#    - name: Futureforms core app clone
+#      ansible.builtin.git:
+#        repo: https://github.com/miracle-42/forms42.core
+#        dest: "{{ install_path }}/core"
+#        version: version-2.1-dev
+#      tags:
+#        - clon_core
 
-    - name: Install Futureforms core app packages based on package.json using the npm
-      community.general.npm:
-        path: "{{ install_path }}/core"
-        state: present
-      tags:
-        - npm_install_core
+#    - name: Install Futureforms core app packages based on package.json using the npm
+#      community.general.npm:
+#        path: "{{ install_path }}/core"
+#        state: present
+#      tags:
+#        - npm_install_core
+
+    - name: Check core is build
+      stat:
+        path: "../../build/core/package.json"
+      register: build_core_package_json
+      tags: build_core_package_json
 
     - name: Build Futureforms core app
       ansible.builtin.command: npm run build
       args:
-        chdir: "{{ install_path }}/core"
+        chdir: "../../src/core"
+      when: build_core_package_json.stat.exists == false
       tags:
         - npm_build_core
 
-    - name: Futureforms demo app clone
-      ansible.builtin.git:
-        repo: https://github.com/chlordk/forms42.demo
-        dest: "{{ install_path }}/demo"
-        force: true
-      tags:
-        - clon_demo
+#    - name: Futureforms demo app clone
+#      ansible.builtin.git:
+#        repo: https://github.com/chlordk/forms42.demo
+#        dest: "{{ install_path }}/demo"
+#        force: true
+#      tags:
+#        - clon_demo
 
     - name: Install Futureforms demo app packages based on package.json using the npm
       community.general.npm:
-        path: "{{ install_path }}/demo"
+        path: "../../src/demo"
         state: present
       tags:
         - npm_install_demo
 
+    - name: Check demo.js exists
+      stat:
+        path: "../../build/demo/demo.js"
+      register: build_demo_demo_js
+      tags: build_demo_demo_js
+
     - name: Build Futureforms demo app
       ansible.builtin.command: npm run build
       args:
-        chdir: "{{ install_path }}/demo"
+        chdir: "../../src/demo"
+      when: build_demo_demo_js.stat.exists == false
       tags:
         - npm_build_demo
 
-    - name: Futureforms Database.js clone
-      ansible.builtin.git:
-        repo: https://github.com/chlordk/database.js.git
-        dest: "{{ install_path }}/database.js.git"
-      tags:
-        - clon_database.js
+#    - name: Futureforms Database.js clone
+#      ansible.builtin.git:
+#        repo: https://github.com/chlordk/database.js.git
+#        dest: "{{ install_path }}/database.js.git"
+#      tags:
+#        - clon_database.js
 
     - name: Remove the postgres database user hr
       community.postgresql.postgresql_user:
@@ -172,7 +194,7 @@
         - create-hr-db
 
     - name: Install the postgres hr schema objects
-      ansible.builtin.command: psql -h 127.0.0.1 -U hr -d hr -f "{{ install_path }}/demo/data/data.demo"
+      ansible.builtin.command: psql -h 127.0.0.1 -U hr -d hr -f "../../src/demo/data/datademo.sql"
       environment:
         PGPASSWORD: hr
       tags:
@@ -185,11 +207,32 @@
       tags:
         - create-database.js.demo
 
+    - name: Check database.js.jar exists
+      stat:
+        path: "../../src/database.js/target"
+      register: src_database_js_target
+      tags: src_database_js_target
+
+    - name: Build database.js.jar
+      ansible.builtin.command: mvn package
+      args:
+        chdir: "../../src/database.js"
+      when: src_database_js_target.stat.exists == false
+      tags:
+        - mvn_package
+
+    - name: Check database.js.zip unarchived
+      stat:
+        path: "../../build/database.js.demo/bin"
+      register: build_database_js_demo_bin
+      tags: build_database_js_demo_bin
+
     - name: Unarchive the futureforms rest api 
       ansible.builtin.unarchive:
-        src: "{{ install_path }}/database.js.git/downloads/database.js.zip"
+        src: "../../src/database.js/downloads/database.js.zip"
         dest: "{{ install_path }}/database.js.demo"
         remote_src: true
+      when: build_database_js_demo_bin.stat.exists == false
       tags:
         - unarchive-database.js.demo
 
@@ -197,7 +240,6 @@
       ansible.builtin.replace: 
         path: "{{ install_path }}/database.js.demo/conf/config.json"
         regexp: '\"path\": \"./app\"'
-        replace: '"path": "../demo/dist"'
+        replace: '"path": "../demo"'
       tags:
-
         - fix-demo-dest
