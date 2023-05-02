@@ -16,6 +16,17 @@ and sends the result back to the client.
 
 ![Figure: Building Blocks](images/blocks.svg)
 
+In FutureForms all or mostly all of the business logic
+is in the front-end.
+
+Eventually some business logic is written in a
+stored procedure in the database.
+
+The back-end (web server) is a generic components so none of the
+application code is written in here.
+
+![Figure: Compare Business Logic](images/compare-business-logic.svg)
+
 ## Security
 
 FutureForms is primarily ment to be used for intra-net.
@@ -25,7 +36,7 @@ and then passed through the back-end directly to the database.
 It is therefore necessary to protect with `GRANT` and other
 security technics.
 
-![Figure: Compare Business Logic](images/compare-business-logic.svg)
+![Figure: Compare Security](images/compare-security.svg)
 
 `database.js` can be configured to reject known keywords like
 `CREATE`, `DROP` and `TRUNCATE` but it recommended to handle
