@@ -1,9 +1,55 @@
-# FutureForms featured demo and tutorial installation
+# FutureForms
+
+FutureForms is a Typescript library for fast and easy development of data entry forms.
+
+Turn a HTML table into a database view, search and edit form with a few edits.
+
+## Stack
+
+A normal Full-stack development consist of af front-end, a back-end and a database.
+In FutureForms this is cut down to a front-end, a generic back-end and a database.
+
+Here the sketch shows the Javascript application running in the client browser
+and then sending SQL to the `database.js` back-end.
+The `database.js` converts the SQL to the appropriate database driver
+and sends the result back to the client.
+
+![Figure: Building Blocks](images/blocks.svg)
+
+## Security
+
+FutureForms is primarily ment to be used for intra-net.
+SQL-statements are written in the Javascript application
+and then passed through the back-end directly to the database.
+
+It is therefore necessary to protect with `GRANT` and other
+security technics.
+
+![Figure: Compare Business Logic](images/compare-business-logic.svg)
+
+`database.js` can be configured to reject known keywords like
+`CREATE`, `DROP` and `TRUNCATE` but it recommended to handle
+the security in the database with `GRANT`.
+
+### Exploits of a Mom
+
+In a standard full-stack setup you have the risk of a SQL-injection.
+With FutureForms any SQL-statements are passed through even
+the infamous `"Robert'); DROP TABLE Sudents"` so you have
+to protect your database for this kind of statements.
+
+![Figure: Exploits of a Mom](images/exploits_of_a_mom.png)
+
+© 2010 [xkcd.com](https://xkcd.com/327/) 
+
+
+## Install FutureForms featured demo and tutorial installation
+
 
 This Ansible script will install FutureForms with the extended demo.
 This demo will show what a lot of the classes in FutureForms can do.
 
-## Requirements
+### Requirements
 
 This script will install a lot of TypeScript package
 so it is recommended to run the script in a Ubuntu
@@ -32,20 +78,13 @@ Change the line with `%sudo` to:
 %sudo   ALL=(ALL:ALL) NOPASSWD:ALL
 ```
 
-## Install
+### Install
 
 Start Ubuntu and install Ansible and Git yourself:
 
 ```
-sudo apt install ansible git
+sudo apt install ansible
 ```
-
-Clone this repository in your working directory:
-
-```
-git clone https://github.com/peter-gram/ff-install
-cd ff-install
-``` 
 
 Now you are ready to install 
 [FutureForms Featured Demo](playbooks/demo/)
